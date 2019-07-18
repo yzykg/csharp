@@ -115,7 +115,12 @@ namespace Quoter
 						existingQuote = quote;
 						QuoteLookupTable[quote.Id] = quote;
 					}
-				}					
+				}	
+				else
+				{
+					quoteMap.add(quote.Id, quote);
+					QuoteLookupTable.add(quote.Id, quote);
+				}				
 			}
 			
 		}
