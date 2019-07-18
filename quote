@@ -87,7 +87,10 @@ namespace Quoter
 	{
 		public QuoteManager()
 		{
+			//BookLookupTable(key: symbol, value: hashtable which contains all the quote with the same symbol) 
 			Hashtable BookLookupTable = new Hashtable();
+			//QuoteLookupTable(key:id, value: quote object)
+			//Reason to create this table is to make RemoveQuote function easier
 			Hashtable QuoteLookupTable = new Hashtable();
 		}
 	
@@ -95,6 +98,7 @@ namespace Quoter
 		{
 			if !BookLookupTable.containsKey(quote.Symbol)
 			{
+				//if this symbol not exists
 				Hashtable QuoteMap = new Hashtable();
 				QuoteMap.add(quote.Id, quote);
 				BookLookupTable.add(quote.Symbol, QuoteMap);
@@ -104,11 +108,14 @@ namespace Quoter
 			{
 				var quoteMap = BookLookupTable[quote.Symbol];
 				var existingQuote = quoteMap[quote.Id];
-				if existingQuote != quote
+				if existingQuote != null
 				{
-					existingQuote = quote;
-					QuoteLookupTable[quote.Id] = quote;
-				}				
+					if existingQuote != quote
+					{
+						existingQuote = quote;
+						QuoteLookupTable[quote.Id] = quote;
+					}
+				}					
 			}
 			
 		}
@@ -117,8 +124,9 @@ namespace Quoter
 		{
 			if QuoteLookupTable.containsKey(id)
 			{
+				//use the QuoteLookupTable to get the symbol, then locate it from the BookLookupTable
 				existingQuote = QuoteLookupTable[id];
-				BookLookupTable.Remove(existingQuote.Symbol);
+				BookLookupTable[existingQuote.Symbol].Remove(id);
 				QuoteLookupTable.Remove(id);
 			}
 		}
@@ -127,6 +135,7 @@ namespace Quoter
 		{
 			if BookLookupTable.containsKey(symbol)
 			{
+				//remove from QuoteLookupTable first, then remove from BookLookupTable
 				quoteMap = BookLookupTable[symbol];
 				foreach(DictionaryEntry quote in quoteMap)
 				{
